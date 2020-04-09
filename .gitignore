@@ -127,3 +127,5 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+test_footage_left.avi
+test_footage_right.avi
