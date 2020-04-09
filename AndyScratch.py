@@ -32,6 +32,9 @@ while True:
     undistort_l = cv.undistort(gray_l, mat_l, dist_l)
     undistort_r = cv.undistort(gray_r, mat_r, dist_r)
     
+    undistort_hstack = np.hstack([undistort_l, undistort_r])
+    cv.imshow('stereo frames', undistort_hstack)
+    
     disp = 16*4
     block = 51
     
