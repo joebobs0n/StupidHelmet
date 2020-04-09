@@ -71,16 +71,16 @@ print(f'Usage:\n  Space bar: capture image\n  ESC: exit script\n')
 
 
 print('Initializing left camera...')
-subprocess.Popen(f'v4l2-ctl -d {left_camera_index} -c focus_auto=0', shell=True, stdout=subprocess.PIPE)
+# subprocess.Popen(f'v4l2-ctl -d {left_camera_index} -c focus_auto=0', shell=True, stdout=subprocess.PIPE)
 cam_l = cv.VideoCapture(left_camera_index)
-cam_l.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc('M', 'J', 'P', 'G'))
+cam_l.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc(*"MJPG"))
 print('Initializing right camera...\n')
-subprocess.Popen(f'v4l2-ctl -d {right_camera_index} -c focus_auto=0', shell=True, stdout=subprocess.PIPE)
+# subprocess.Popen(f'v4l2-ctl -d {right_camera_index} -c focus_auto=0', shell=True, stdout=subprocess.PIPE)
 cam_r = cv.VideoCapture(right_camera_index)
-cam_r.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc('M', 'J', 'P', 'G'))
+cam_r.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc(*"MJPG"))
 
 chessboard = [cb_width, cb_height]
-criteria = (cv.TERM_CRITERIA_EPS + cv.TERM_CRITERIA_MAX_ITER, 30, 0.001)
+criteria = (cv.TERM_CRITERIA_EPS + cv.TERM_CRITERIA_MAX_ITER, 30, 0.01)
 board_points = np.zeros((chessboard[0] * chessboard[1], 3), np.float32)
 board_points[:, :2] = np.mgrid[0:chessboard[0], 0:chessboard[1]].T.reshape(-1, 2) * grid_width
 image_count = 0
@@ -111,7 +111,7 @@ for side in ['left', 'right']:
 			if corners is None:
 				print('  No chessboard detected. Try again.')
 			else:
-				subpix = cv.cornerSubPix(gray, corners, (11, 11), (-1, -1), criteria)
+				subpix = cv.cornerSubPix(gray, corners, (5, 5), (-1, -1), criteria)
 				image_points.append(subpix)
 				world_points.append(board_points)
 				image_count += 1

@@ -24,8 +24,8 @@ R2 = rectify['R2']
 P1 = rectify['P1']
 P2 = rectify['P2']
 
-l1, l2 = cv.initUndistortRectifyMap(mat_l, dist_l, R1, P1, (480, 640), cv.CV_32FC2)
-r1, r2 = cv.initUndistortRectifyMap(mat_r, dist_r, R2, P2, (480, 640), cv.CV_32FC2)
+l1, l2 = cv.initUndistortRectifyMap(mat_l, dist_l, R1, P1, (480, 640), cv.CV_32FC1)
+r1, r2 = cv.initUndistortRectifyMap(mat_r, dist_r, R2, P2, (480, 640), cv.CV_32FC1)
 
 while True:
     ret_l, frame_l = cam_l.read()
