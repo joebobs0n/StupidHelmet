@@ -7,10 +7,10 @@ import sys
 
 os.chdir(sys.path[0])
 
-cam_l = cv.VideoCapture('test_footage_left.avi')
-cam_r = cv.VideoCapture('test_footage_right.avi')
-# cam_l = cv.VideoCapture(3)
-# cam_r = cv.VideoCapture(2)
+# cam_l = cv.VideoCapture('test_footage_left.avi')
+# cam_r = cv.VideoCapture('test_footage_right.avi')
+cam_l = cv.VideoCapture(3)
+cam_r = cv.VideoCapture(2)
 
 left_params = np.load('stereo_params/left_params.npz')
 right_params = np.load('stereo_params/right_params.npz')
@@ -32,9 +32,12 @@ r1, r2 = cv.initUndistortRectifyMap(mat_r, dist_r, R2, P2, (480, 640), cv.CV_32F
 while True:
     ret_l, frame_l = cam_l.read()
     ret_r, frame_r = cam_r.read()
+    frame_l = imutils.rotate_bound(frame_l, 90 * 3)
+    frame_r = imutils.rotate_bound(frame_r, 90 * 1)
 
 
     gray_l = cv.cvtColor(frame_l, cv.COLOR_BGR2GRAY)
+    # gray_l = np.flip(np.shape(gray_l))
     gray_r = cv.cvtColor(frame_r, cv.COLOR_BGR2GRAY)
 
     if ret_l == False or ret_r == False:
@@ -51,13 +54,13 @@ while True:
 
     stereo = cv.StereoBM_create()
     stereo.setMinDisparity(4)
-    stereo.setNumDisparities(128)
+    stereo.setNumDisparities(112)
     stereo.setBlockSize(21)
-    stereo.setSpeckleRange(16)
-    stereo.setSpeckleWindowSize(45)
+    stereo.setSpeckleRange(45)#16
+    stereo.setSpeckleWindowSize(10)#45
     disparity = stereo.compute(rectify_l, rectify_r)
 
-    cv.imshow('preview', disparity/2048)
+    cv.imshow('preview', disparity/1024)
 
     k = cv.waitKey(1) & 0xff
     if k == 27:
