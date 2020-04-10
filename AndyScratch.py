@@ -4,13 +4,14 @@ import imutils
 from matplotlib import pyplot as plt
 import os
 import sys
+import stupid_helmet_helpers as shh
 
 os.chdir(sys.path[0])
 
-# cam_l = cv.VideoCapture('test_footage_left.avi')
-# cam_r = cv.VideoCapture('test_footage_right.avi')
-cam_l = cv.VideoCapture(3)
-cam_r = cv.VideoCapture(2)
+cam_l = cv.VideoCapture('test_footage_left.avi')
+cam_r = cv.VideoCapture('test_footage_right.avi')
+# cam_l = cv.VideoCapture(3)
+# cam_r = cv.VideoCapture(2)
 
 left_params = np.load('stereo_params/left_params.npz')
 right_params = np.load('stereo_params/right_params.npz')
@@ -32,8 +33,8 @@ r1, r2 = cv.initUndistortRectifyMap(mat_r, dist_r, R2, P2, (480, 640), cv.CV_32F
 while True:
     ret_l, frame_l = cam_l.read()
     ret_r, frame_r = cam_r.read()
-    frame_l = imutils.rotate_bound(frame_l, 90 * 3)
-    frame_r = imutils.rotate_bound(frame_r, 90 * 1)
+    # frame_l = imutils.rotate_bound(frame_l, 90 * 3)
+    # frame_r = imutils.rotate_bound(frame_r, 90 * 1)
 
 
     gray_l = cv.cvtColor(frame_l, cv.COLOR_BGR2GRAY)
@@ -59,6 +60,10 @@ while True:
     stereo.setSpeckleRange(45)#16
     stereo.setSpeckleWindowSize(10)#45
     disparity = stereo.compute(rectify_l, rectify_r)
+    
+    ret, disp_partitioned = shh.parseDisparityMap(disparity, size=(25, 2))
+    if ret == True:
+        print(disp_partitioned)
 
     cv.imshow('preview', disparity/1024)
 
