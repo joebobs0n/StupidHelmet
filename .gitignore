@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 test_footage_left.avi
 test_footage_right.avi
+*.png

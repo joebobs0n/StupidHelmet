@@ -52,7 +52,7 @@ if args.get('rotright'):
 if args.get('gridwidth'):
     grid_width = float(args['gridwidth'])
 if args.get('verification'):
-    verify = bool(args['verification'])
+    verify = True if int(args['verification']) == 1 else False
 if args.get('path'):
 	file_path = args['path']
 
@@ -71,11 +71,11 @@ print(f'Usage:\n  Space bar: capture image\n  ESC: exit script\n')
 
 
 print('Initializing left camera...')
-# subprocess.Popen(f'v4l2-ctl -d {left_camera_index} -c focus_auto=0', shell=True, stdout=subprocess.PIPE)
+subprocess.Popen(f'v4l2-ctl -d {left_camera_index} -c focus_auto=0', shell=True, stdout=subprocess.PIPE)
 cam_l = cv.VideoCapture(left_camera_index)
 cam_l.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc(*"MJPG"))
 print('Initializing right camera...\n')
-# subprocess.Popen(f'v4l2-ctl -d {right_camera_index} -c focus_auto=0', shell=True, stdout=subprocess.PIPE)
+subprocess.Popen(f'v4l2-ctl -d {right_camera_index} -c focus_auto=0', shell=True, stdout=subprocess.PIPE)
 cam_r = cv.VideoCapture(right_camera_index)
 cam_r.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc(*"MJPG"))
 
@@ -104,7 +104,7 @@ for side in ['left', 'right']:
 		elif k == ord(' '):
 			if image_count == 0 and side == 'left':
 				frame_shape = tuple(np.flip(np.shape(frame)[0:2]))
-   
+
 			gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
 			corners = cv.findChessboardCorners(gray, (chessboard[0], chessboard[1]), None)[1]
 
@@ -126,14 +126,14 @@ for side in ['left', 'right']:
 	fSx = mat[0, 0]
 	focal_length = fSx * pixel if pixel > 0 else -1
 
-	f = open(f'{file_path}/{side}_params.txt', 'w')
+	f = open(f'{file_path}{side}_params.txt', 'w')
 	# f = open(side + '_params.txt', 'w')
 	f.write(f'focal length in pixels:\n{fSx}\n\n')
 	f.write(f'focal length in mm:\n{focal_length}\n\n')
 	f.write(f'intrinsic paramters:\n{mat}\n\n')
 	f.write(f'distortion paramters:\n{dist}')
 	f.close()
-	np.savez(f'{file_path}/{side}_params.npz', flpx=fSx, flmm=focal_length, mat=mat, dist=dist)
+	np.savez(f'{file_path}{side}_params.npz', flpx=fSx, flmm=focal_length, mat=mat, dist=dist)
 
 	cv.destroyAllWindows()
 	image_count = 0
@@ -184,31 +184,31 @@ while image_count < calib_max_images:
 cv.destroyAllWindows()
 
 print(f'  Calculating stereo calibration parameters.')
-left = np.load(f'{file_path}/left_params.npz')
+left = np.load(f'{file_path}left_params.npz')
 mat_l = left['mat']
 dist_l = left['dist']
-right = np.load(f'{file_path}/right_params.npz')
+right = np.load(f'{file_path}right_params.npz')
 mat_r = right['mat']
 dist_r = right['dist']
 (_, _, _, _, _, R, T, E, F) = cv.stereoCalibrate(world_points_stereo, image_points_left, image_points_right, mat_l, dist_l, mat_r, dist_r, frame_shape, criteria=criteria, flags=cv.CALIB_FIX_INTRINSIC)
-f = open(f'{file_path}/stereo_params.txt', 'w')
+f = open(f'{file_path}stereo_params.txt', 'w')
 f.write(f'R:\n{R}\n\n')
 f.write(f'T:\n{T}\n\n')
 f.write(f'E:\n{E}\n\n')
 f.write(f'F:\n{F}')
 f.close()
-np.savez(f'{file_path}/stereo_params.npz', R=R, T=T, E=E, F=F)
+np.savez(f'{file_path}stereo_params.npz', R=R, T=T, E=E, F=F)
 
 print(f'  Calculating stereo rectification paramters.\n')
 R1, R2, P1, P2, Q = cv.stereoRectify(mat_l, dist_l, mat_r, dist_r, frame_shape, R, T)[0:5]
-f = open(f'{file_path}/rectify_params.txt', 'w')
+f = open(f'{file_path}rectify_params.txt', 'w')
 f.write(f'R1:\n{R1}\n\n')
 f.write(f'R2:\n{R2}\n\n')
 f.write(f'P1:\n{P1}\n\n')
 f.write(f'P2:\n{P2}\n\n')
 f.write(f'Q:\n{Q}\n\n')
 f.close()
-np.savez(f'{file_path}/rectify_params.npz', R1=R1, R2=R2, P1=P1, P2=P2, Q=Q)
+np.savez(f'{file_path}rectify_params.npz', R1=R1, R2=R2, P1=P1, P2=P2, Q=Q)
 
 print('Full calibration complete.')
 
@@ -234,12 +234,12 @@ while verify:
 	if ret_l is True and ret_r is True:
 		point_l = np.array([corners_l[0]])
 		point_r = np.array([corners_r[0]])
-  
+
 		dist_points_l = cv.undistortPoints(point_l, mat_l, dist_l, R=R1, P=P1)
 		dist_points_r = cv.undistortPoints(point_r, mat_r, dist_r, R=R2, P=P2)
 
 		disparity = np.array([[dist_points_l[0][0][0] - dist_points_r[0][0][0]]])
-  
+
 		dist_points_l = np.array(dist_points_l).reshape((1, 2))
 		dist_points_l = np.hstack([dist_points_l, disparity]).reshape((1, 1, 3))
 
