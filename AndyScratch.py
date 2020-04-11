@@ -4,7 +4,7 @@ import imutils
 from matplotlib import pyplot as plt
 import os
 import sys
-import stupid_helmet_helpers as shh
+import stupid_helmet_helpers as stpdhh
 
 os.chdir(sys.path[0])
 
@@ -30,6 +30,26 @@ P2 = rectify['P2']
 l1, l2 = cv.initUndistortRectifyMap(mat_l, dist_l, R1, P1, (480, 640), cv.CV_32FC1)
 r1, r2 = cv.initUndistortRectifyMap(mat_r, dist_r, R2, P2, (480, 640), cv.CV_32FC1)
 
+stereo = cv.StereoBM_create()
+
+# This book is fantastic.... https://ebookcentral.proquest.com/lib/byu/reader.action?docID=4770094
+
+stereo.setBlockSize(21)
+
+stereo.setMinDisparity(4)# # minimum disparity. Most use 0.
+stereo.setNumDisparities(112)#176 # the range of allowable disparities
+
+# stereo.setPreFilterType(1) # 0 = prefilter to a normalized response, 1 is a x sobel filter
+# stereo.setPreFilterSize(21) # The block used for the prefilter
+# stereo.setPreFilterCap(32) # Saturation applied after prefiltering
+#
+# stereo.setTextureThreshold(1) # The amount of texture necessary for a disparity to be determined (otherwise => blank/black)
+#
+# stereo.setUniquenessRatio(1) # The amount of uniqueness required for two competing results for a "winner" to be declared
+
+stereo.setSpeckleWindowSize(10)#45 # Maximum size of a dettached blob to be considered as a "speckle"
+stereo.setSpeckleRange(45)#16 # Maximum allowable difference between pixels in a speckle. Otherwise flood-fill?
+
 while True:
     ret_l, frame_l = cam_l.read()
     ret_r, frame_r = cam_r.read()
@@ -50,18 +70,10 @@ while True:
     undistort_hstack = np.hstack([rectify_l, rectify_r])
     cv.imshow('stereo frames', undistort_hstack)
 
-    # disp = 128
-    # block = 21
-
-    stereo = cv.StereoBM_create()
-    stereo.setMinDisparity(4)
-    stereo.setNumDisparities(112)
-    stereo.setBlockSize(21)
-    stereo.setSpeckleRange(45)#16
-    stereo.setSpeckleWindowSize(10)#45
     disparity = stereo.compute(rectify_l, rectify_r)
-    
-    ret, disp_partitioned = shh.parseDisparityMap(disparity, size=(25, 2))
+
+    # ret, disp_partitioned, disp_frame = stpdhh.parseDisparityMap(disparity, size=(2, 25, 3))
+    ret, disp_partitioned = stpdhh.parseDisparityMap(disparity, size=(2, 25, 3))
     if ret == True:
         print(disp_partitioned)
 
