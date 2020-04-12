@@ -56,8 +56,8 @@ if ret_r == False:
 # frame_l = imutils.rotate_bound(frame_l, 90 * 3)  # uncomment if using video feed
 # frame_r = imutils.rotate_bound(frame_r, 90 * 1)  # uncomment if using video feed
 # save shape of read frames
-shape_l = np.flip(np.shape(frame_l)[0:2])
-shape_r = np.flip(np.shape(frame_r)[0:2])
+shape_l = tuple(np.flip(np.shape(frame_l)[0:2]))
+shape_r = tuple(np.flip(np.shape(frame_r)[0:2]))
 # calculate left and right camera remapping
 l1, l2 = cv.initUndistortRectifyMap(
     mat_l, dist_l, R1, P1, shape_l, cv.CV_32FC1)
@@ -115,7 +115,15 @@ while True:
     cv.imshow('preview', disparity/1024)
 
     # calculate rgb representation to send
-    ret, disp_partitioned = stpdhh.parseDisparityMap(disparity)
+    ret, rgb_representation = stpdhh.parseDisparityMap(disparity)
+    # calculate viewer and display
+    c = 20
+    disp_partitioned = np.ones((rgb_representation.shape[0]*c, rgb_representation.shape[1]*c, 3))
+    if ret == True:
+        for y in range(rgb_representation.shape[0]):
+            for x in range(rgb_representation.shape[1]):
+                disp_partitioned[y*c:(y+1)*c, x*c:(x+1)*c] = disp_partitioned[y*c:(y+1)*c, x*c:(x+1)*c] * rgb_representation[y][x]
+    cv.imshow('led representation', disp_partitioned)
 
     # wait maximum 1 ms to read keystroke
     k = cv.waitKey(1) & 0xff
