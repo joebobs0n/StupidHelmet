@@ -118,12 +118,12 @@ while True:
     ret, rgb_representation = stpdhh.parseDisparityMap(disparity)
     # calculate viewer and display
     c = 20
-    disp_partitioned = np.ones(
+    disp_partitioned = np.zeros(
         (rgb_representation.shape[0]*c, rgb_representation.shape[1]*c, 3))
     if ret == True:
         for y in range(rgb_representation.shape[0]):
             for x in range(rgb_representation.shape[1]):
-                disp_partitioned[y*c:(y+1)*c, x*c:(x+1)*c] = disp_partitioned[y*c:(y+1)*c, x*c:(x+1)*c] * rgb_representation[y][x]
+                disp_partitioned[y*c:(y+1)*c-1, x*c:(x+1)*c-1] = np.ones((c-1, c-1, 3)) * np.flip(rgb_representation[y][x])
     cv.imshow('led representation', disp_partitioned)
 
     # wait maximum 1 ms to read keystroke
