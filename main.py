@@ -5,7 +5,7 @@ import stupid_helmet_helpers as shh
 from stupid_helmet_helpers import Transmitter as udptx
 import subprocess
 
-# these next three lines are only needed on windows
+# these next three lines are only needed on windows (no effect on linux)
 import os
 import sys
 os.chdir(sys.path[0])  # change working dir to script dir
@@ -21,13 +21,13 @@ bm_spkl_win = 10  # size of window to detect object edges
 bm_spkl_r = 45  # max disparity diff allowed within speckle
 led_dims = (2, 25, 3)  # dimensions of led data [y, x, z] where z is RGB
 c = 20  # led representation block size (in pixels)
-udp_ip = '127.0.0.1'
-udp_port = 12345
+udp_ip = '127.0.0.1'  # udp working network address
+udp_port = 12345  # udp port number
 
 # FLAGS
-showRect_flg = True
-showDisp_flg = True
-showRGB_flg = True
+showRect_flg = True  # show rectified frames (cononical view)
+showDisp_flg = True  # show disparity depth map
+showRGB_flg = True  # show led representation
 
 # ------------------------------------------------------------------ FUNCTIONS --
 def quitScript():
@@ -154,12 +154,12 @@ while True:
         # show RGB output
         if showRGB_flg == True:
             # initialize frame
-            frame_bgr = np.ones((led_dims[0]*c, led_dims[1]*c, led_dims[2]))
+            frame_bgr = np.zeros((led_dims[0]*c, led_dims[1]*c, led_dims[2]))
             # work through each LED data
             for y in range(led_dims[0]):
                 for x in range(led_dims[1]):
                     # copy LED color to whole display block within frame
-                    frame_bgr[y*c:(y+1)*c, x*c:(x+1)*c] = frame_bgr[y*c:(y+1)*c, x*c:(x+1)*c] * np.flip(frame_rgb[y][x])
+                    frame_bgr[y*c:(y+1)*c-1, x*c:(x+1)*c-1] = np.ones((c-1, c-1, 3)) * np.flip(frame_rgb[y][x])
             # show the frame
             cv.imshow('LED Representation', frame_bgr)
 
