@@ -118,7 +118,8 @@ while True:
     ret, rgb_representation = stpdhh.parseDisparityMap(disparity)
     # calculate viewer and display
     c = 20
-    disp_partitioned = np.ones((rgb_representation.shape[0]*c, rgb_representation.shape[1]*c, 3))
+    disp_partitioned = np.ones(
+        (rgb_representation.shape[0]*c, rgb_representation.shape[1]*c, 3))
     if ret == True:
         for y in range(rgb_representation.shape[0]):
             for x in range(rgb_representation.shape[1]):
