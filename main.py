@@ -2,8 +2,8 @@
 import numpy as np
 import cv2 as cv
 import stupid_helmet_helpers as shh
-from stupid_helmet_helpers import Transmitter as tx
-import argparse
+from stupid_helmet_helpers import Transmitter as udptx
+import subprocess
 
 # these next three lines are only needed on windows
 import os
@@ -21,6 +21,8 @@ bm_spkl_win = 10  # size of window to detect object edges
 bm_spkl_r = 45  # max disparity diff allowed within speckle
 led_dims = (2, 25, 3)  # dimensions of led data [y, x, z] where z is RGB
 c = 20  # led representation block size (in pixels)
+udp_ip = '127.0.0.1'
+udp_port = 12345
 
 # FLAGS
 showRect_flg = True
@@ -29,15 +31,29 @@ showRGB_flg = True
 
 # ------------------------------------------------------------------ FUNCTIONS --
 def quitScript():
-    cv.destroyAllWindows()
-    cam_l.release()
-    cam_r.release()
-    exit()
+    cv.destroyAllWindows()  # close all windows created by opencv
+    cam_l.release()  # destroy left camera object
+    cam_r.release()  # destroy right camera object
+    exit()  # exit script
 
 # ------------------------------------------------ GLOBALS AND INITIALIZATIONS --
 # INITIALIZE CAMERAS
-cam_l = cv.VideoCapture(index_l)  # change for current left index
-cam_r = cv.VideoCapture(index_r)  # change for current right index
+# print user feedback for left camera
+print(f'Initializing left camera at index {index_l}.')
+# turn off left camera auto focus
+subprocess.Popen(f'v4l2-ctl -d {index_l} -c focus_auto=0', shell=True, stdout=subprocess.PIPE)
+# start opencv camera object at left index
+cam_l = cv.VideoCapture(index_l)
+# change to compressed pixels for faster data transfer
+cam_l.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc(*"MJPG"))
+# print user feedback for right camera
+print(f'Initializing right camera at index {index_r}.')
+# turn off right camera auto focus
+subprocess.Popen(f'v4l2-ctl -d {index_r} -c focus_auto=0', shell=True, stdout=subprocess.PIPE)
+# start opencv camera object at right index
+cam_r = cv.VideoCapture(index_r)
+# change to compressed pixels for faster data transfer
+cam_r.set(cv.CAP_PROP_FOURCC, cv.VideoWriter_fourcc(*"MJPG"))
 
 # SETUP VARIABLES FOR STEREO RECTIFICATION
 # read in left camera intrinsic and distortion parameters
@@ -57,23 +73,28 @@ P2 = rectify['P2']
 # read in one frame from left and right cameras
 ret_l, frame_l = cam_l.read()
 ret_r, frame_r = cam_r.read()
-# check to see if a frame was received --> if not quit script
+# check to see both frames were received --> if not quit script
+q = False
+# check left
 if ret_l == False:
     print('Cannot get frame from left camera. Exiting...')
-    quitScript()
+    q = True
+# check right
 if ret_r == False:
     print('Cannot get frame from right camera. Exiting...')
+    q = True
+# if either didn't return frame, exit
+if q == True:
     quitScript()
+# rotate frames to correct orientation
 frame_l = cv.rotate(frame_l, cv.ROTATE_90_COUNTERCLOCKWISE)
 frame_r = cv.rotate(frame_r, cv.ROTATE_90_CLOCKWISE)
 # save shape of read frames
 shape_l = tuple(np.flip(np.shape(frame_l)[0:2]))
 shape_r = tuple(np.flip(np.shape(frame_r)[0:2]))
 # calculate left and right camera remapping
-l1, l2 = cv.initUndistortRectifyMap(
-    mat_l, dist_l, R1, P1, shape_l, cv.CV_32FC1)
-r1, r2 = cv.initUndistortRectifyMap(
-    mat_r, dist_r, R2, P2, shape_r, cv.CV_32FC1)
+l1, l2 = cv.initUndistortRectifyMap(mat_l, dist_l, R1, P1, shape_l, cv.CV_32FC1)
+r1, r2 = cv.initUndistortRectifyMap(mat_r, dist_r, R2, P2, shape_r, cv.CV_32FC1)
 
 # INITIALIZE STEREO BLOCK MATCHING OBJECT
 # initialize object
@@ -84,6 +105,9 @@ sbm.setMinDisparity(bm_min)
 sbm.setNumDisparities(bm_n * 16)
 sbm.setSpeckleWindowSize(bm_spkl_win)
 sbm.setSpeckleRange(bm_spkl_r)
+
+# INITIALIZE UDP TRANSMITTER
+tx = udptx.__init__(IpAddr=udp_ip, UdpPort=udp_port)
 
 # ------------------------------------------------------------------ MAIN LOOP --
 while True:
@@ -106,6 +130,8 @@ while True:
         dm = sbm.compute(rectify_l, rectify_r)
         # calculate RGB representation to send to LEDs
         frame_rgb = shh.parseDisparityMap(dm, size=led_dims)[1]
+        # send the RGB representation to the helmet LEDs
+        tx.SendData(frame_rgb)
 
         # GET USER INPUT (IF NECESSARY)
         # wait maximum 1 ms to read keystroke
