@@ -16,18 +16,18 @@ index_l = 3  # left camera index
 index_r = 2  # right camera index
 bm_block = 21  # size of blocks for matching
 bm_min = 4  # minimum detectable disparity
-bm_n = 7  # essentially set range (mutiplied by 16 below)
+bm_n = 7 * 16  # essentially set range
 bm_spkl_win = 10  # size of window to detect object edges
 bm_spkl_r = 45  # max disparity diff allowed within speckle
 led_dims = (2, 25, 3)  # dimensions of led data [y, x, z] where z is RGB
 c = 20  # led representation block size (in pixels)
-udp_ip = '127.0.0.1'  # udp working network address
+udp_ip =  '192.168.1.223'  #'127.0.0.1'  # udp working network address
 udp_port = 12345  # udp port number
 
 # FLAGS
 showRect_flg = True  # show rectified frames (cononical view)
 showDisp_flg = True  # show disparity depth map
-showRGB_flg = True  # show led representation
+showRGB_flg = False  # show led representation
 
 # ------------------------------------------------------------------ FUNCTIONS --
 def quitScript():
@@ -87,8 +87,8 @@ if ret_r == False:
 if q == True:
     quitScript()
 # rotate frames to correct orientation
-frame_l = cv.rotate(frame_l, cv.ROTATE_90_COUNTERCLOCKWISE)
-frame_r = cv.rotate(frame_r, cv.ROTATE_90_CLOCKWISE)
+# frame_l = cv.rotate(frame_l, cv.ROTATE_90_COUNTERCLOCKWISE)
+# frame_r = cv.rotate(frame_r, cv.ROTATE_90_CLOCKWISE)
 # save shape of read frames
 shape_l = tuple(np.flip(np.shape(frame_l)[0:2]))
 shape_r = tuple(np.flip(np.shape(frame_r)[0:2]))
@@ -102,12 +102,12 @@ sbm = cv.StereoBM_create()
 # set parameters for detection
 sbm.setBlockSize(bm_block)
 sbm.setMinDisparity(bm_min)
-sbm.setNumDisparities(bm_n * 16)
+sbm.setNumDisparities(bm_n)
 sbm.setSpeckleWindowSize(bm_spkl_win)
 sbm.setSpeckleRange(bm_spkl_r)
 
 # INITIALIZE UDP TRANSMITTER
-tx = udptx.__init__(IpAddr=udp_ip, UdpPort=udp_port)
+tx = udptx(IpAddr=udp_ip, UdpPort=udp_port)
 
 # ------------------------------------------------------------------ MAIN LOOP --
 while True:
@@ -118,8 +118,8 @@ while True:
     if ret_l == True and ret_r == True:
         # FRAME MANIPULATIONS (READ->RECTIFY->CALC DISP->GET RGB)
         # rotate frames appropriately
-        frame_l = cv.rotate(frame_l, cv.ROTATE_90_COUNTERCLOCKWISE)
-        frame_r = cv.rotate(frame_r, cv.ROTATE_90_CLOCKWISE)
+        # frame_l = cv.rotate(frame_l, cv.ROTATE_90_COUNTERCLOCKWISE)
+        # frame_r = cv.rotate(frame_r, cv.ROTATE_90_CLOCKWISE)
         # convert frames to grayscale
         gray_l = cv.cvtColor(frame_l, cv.COLOR_BGR2GRAY)
         gray_r = cv.cvtColor(frame_r, cv.COLOR_BGR2GRAY)
@@ -127,9 +127,9 @@ while True:
         rectify_l = cv.remap(gray_l, l1, l2, cv.INTER_LINEAR)
         rectify_r = cv.remap(gray_r, r1, r2, cv.INTER_LINEAR)
         # calculate depth map in terms of disparity
-        dm = sbm.compute(rectify_l, rectify_r)
+        dm = sbm.compute(rectify_l, rectify_r)/1024
         # calculate RGB representation to send to LEDs
-        frame_rgb = shh.parseDisparityMap(dm, size=led_dims)[1]
+        frame_rgb = shh.parseDisparityMap(dm, bm_n, size=led_dims)[1]
         # send the RGB representation to the helmet LEDs
         tx.SendData(frame_rgb)
 

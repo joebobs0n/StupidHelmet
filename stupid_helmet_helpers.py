@@ -2,7 +2,7 @@ import numpy as np
 import socket
 
 
-def parseDisparityMap(frame, size=(2, 25, 3)):
+def parseDisparityMap(frame, num_bins, size=(2, 25, 3)):
     # copy out frame data so we don't change it
     temp_frame = frame.copy()
     # initialize return variables
@@ -32,19 +32,27 @@ def parseDisparityMap(frame, size=(2, 25, 3)):
                 x1 = int(x_indices[x+1])
                 # pull off frame partition
                 partition = frame[y0:y1, x0:x1]
+                print("min:", np.min(partition))
+                print("max:", np.max(partition))
                 # here we can do whatever "statistical analysis" we want
                 # for now, i'm just averaging the data
-                partition_data = np.mean(partition)
+                amounts, lower_bound = np.histogram(partition, np.linspace(0, num_bins/2014, 10))
+                result = np.dot(amounts, lower_bound[:-1])
+                print(result)
+                # partition_data = np.max(partition)
+                partition_data = result
                 # calculate rgb colors to represent disparity
                 rgb = [0, 0, 0]
-                if partition_data < 15:  # if nothing detected or very very close
+                if partition_data < 29:  # if nothing detected or very very close
+                # if partition_data < 0.046:  # if nothing detected or very very close
                     rgb = [0, 0, 128]  # show blue
-                elif partition_data > 1000:  # if something detected very far away
+                elif partition_data > 270:  # if something detected very far away
+                # elif partition_data > 1.8:  # if something detected very far away
                     rgb = [0, 0, 0]  # show black
                 else:  # if something detected within 1000 disparity
                     # calculate color mixed from red to green
-                    rgb = [((1000 - partition_data) * 0.128),
-                           partition_data * 0.128, 0]
+                    rgb = [partition_data * 128/270,
+                           ((270 - partition_data) * 128/270), 0]
                 # save rgb value in parsed frame data
                 parsed_frame[y, x] = rgb
 

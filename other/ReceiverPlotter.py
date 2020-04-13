@@ -32,13 +32,13 @@ def cvt_rgb2Hex(rgb):
 def plotArray(array):
     rect = []
     num_rows = np.shape(array)[1]
-    print(num_rows)
+    # print(num_rows)
     for pg, page in enumerate(array):
-        print(pg)
+        # print(pg)
         for rr, row in enumerate(page):
             hex_color = cvt_rgb2Hex((int(row[0]), int(row[1]), int(row[2])))
             rect.append(matplotlib.patches.Rectangle((x_low+100*rr,0-100*pg),100,100,color=f'#{hex_color}'))
-            print(rr+pg*num_rows)
+            # print(rr+pg*num_rows)
             ax.add_artist(rect[rr+pg*num_rows])
     plt.draw()
     plt.pause(0.001)
@@ -48,5 +48,5 @@ while True:
     byte_array, _ = s.recvfrom(buffer_size)
     array = np.frombuffer(byte_array, dtype=np.float32)
     array = np.reshape(array, (num_pages, num_rows, num_cols))
-    print(np.shape(array))
+    # print(np.shape(array))
     plotArray(array)
