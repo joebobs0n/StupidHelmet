@@ -2,16 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5619e049-1640-4a3b-b39a-0bc307109f6c" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/other/ReceiverPlotter.py" beforeDir="false" afterPath="$PROJECT_DIR$/other/ReceiverPlotter.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stereo_params/left_params.npz" beforeDir="false" afterPath="$PROJECT_DIR$/stereo_params/left_params.npz" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stereo_params/left_params.txt" beforeDir="false" afterPath="$PROJECT_DIR$/stereo_params/left_params.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stereo_params/rectify_params.npz" beforeDir="false" afterPath="$PROJECT_DIR$/stereo_params/rectify_params.npz" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stereo_params/rectify_params.txt" beforeDir="false" afterPath="$PROJECT_DIR$/stereo_params/rectify_params.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stereo_params/right_params.npz" beforeDir="false" afterPath="$PROJECT_DIR$/stereo_params/right_params.npz" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stereo_params/right_params.txt" beforeDir="false" afterPath="$PROJECT_DIR$/stereo_params/right_params.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stereo_params/stereo_params.npz" beforeDir="false" afterPath="$PROJECT_DIR$/stereo_params/stereo_params.npz" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/stereo_params/stereo_params.txt" beforeDir="false" afterPath="$PROJECT_DIR$/stereo_params/stereo_params.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/other/Transmitter.py" beforeDir="false" afterPath="$PROJECT_DIR$/other/Transmitter.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/other/recordStereo.py" beforeDir="false" afterPath="$PROJECT_DIR$/other/recordStereo.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/stupid_helmet_helpers.py" beforeDir="false" afterPath="$PROJECT_DIR$/stupid_helmet_helpers.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -106,42 +100,46 @@
       <screen x="446" y="1050" width="1920" height="1080" />
     </state>
     <state x="1492" y="1186" width="777" height="842" key="#main/446.1050.1920.1080/0.0.1680.1050@446.1050.1920.1080" timestamp="1586799016154" />
-    <state width="936" height="76" key="GridCell.Tab.0.bottom" timestamp="1586813312297">
+    <state width="1043" height="279" key="GridCell.Tab.0.bottom" timestamp="1586896352189">
       <screen x="446" y="1050" width="1920" height="1080" />
     </state>
-    <state width="816" height="239" key="GridCell.Tab.0.bottom/446.1050.1920.1080/0.0.1680.1050@0.0.1680.1050" timestamp="1586807748353" />
-    <state width="936" height="76" key="GridCell.Tab.0.bottom/446.1050.1920.1080/0.0.1680.1050@446.1050.1920.1080" timestamp="1586813312297" />
-    <state width="936" height="76" key="GridCell.Tab.0.center" timestamp="1586813312297">
+    <state width="1656" height="83" key="GridCell.Tab.0.bottom/446.1050.1920.1080/0.0.1680.1050@0.0.1680.1050" timestamp="1586883014852" />
+    <state width="1043" height="279" key="GridCell.Tab.0.bottom/446.1050.1920.1080/0.0.1680.1050@446.1050.1920.1080" timestamp="1586896352189" />
+    <state width="1043" height="279" key="GridCell.Tab.0.center" timestamp="1586896352189">
       <screen x="446" y="1050" width="1920" height="1080" />
     </state>
-    <state width="816" height="239" key="GridCell.Tab.0.center/446.1050.1920.1080/0.0.1680.1050@0.0.1680.1050" timestamp="1586807748353" />
-    <state width="936" height="76" key="GridCell.Tab.0.center/446.1050.1920.1080/0.0.1680.1050@446.1050.1920.1080" timestamp="1586813312297" />
-    <state width="936" height="76" key="GridCell.Tab.0.left" timestamp="1586813312297">
+    <state width="1656" height="83" key="GridCell.Tab.0.center/446.1050.1920.1080/0.0.1680.1050@0.0.1680.1050" timestamp="1586883014852" />
+    <state width="1043" height="279" key="GridCell.Tab.0.center/446.1050.1920.1080/0.0.1680.1050@446.1050.1920.1080" timestamp="1586896352189" />
+    <state width="1043" height="279" key="GridCell.Tab.0.left" timestamp="1586896352189">
       <screen x="446" y="1050" width="1920" height="1080" />
     </state>
-    <state width="816" height="239" key="GridCell.Tab.0.left/446.1050.1920.1080/0.0.1680.1050@0.0.1680.1050" timestamp="1586807748353" />
-    <state width="936" height="76" key="GridCell.Tab.0.left/446.1050.1920.1080/0.0.1680.1050@446.1050.1920.1080" timestamp="1586813312297" />
-    <state width="936" height="76" key="GridCell.Tab.0.right" timestamp="1586813312297">
+    <state width="1656" height="83" key="GridCell.Tab.0.left/446.1050.1920.1080/0.0.1680.1050@0.0.1680.1050" timestamp="1586883014852" />
+    <state width="1043" height="279" key="GridCell.Tab.0.left/446.1050.1920.1080/0.0.1680.1050@446.1050.1920.1080" timestamp="1586896352189" />
+    <state width="1043" height="279" key="GridCell.Tab.0.right" timestamp="1586896352189">
       <screen x="446" y="1050" width="1920" height="1080" />
     </state>
-    <state width="816" height="239" key="GridCell.Tab.0.right/446.1050.1920.1080/0.0.1680.1050@0.0.1680.1050" timestamp="1586807748353" />
-    <state width="936" height="76" key="GridCell.Tab.0.right/446.1050.1920.1080/0.0.1680.1050@446.1050.1920.1080" timestamp="1586813312297" />
-    <state width="1896" height="339" key="GridCell.Tab.1.bottom" timestamp="1586812130013">
+    <state width="1656" height="83" key="GridCell.Tab.0.right/446.1050.1920.1080/0.0.1680.1050@0.0.1680.1050" timestamp="1586883014852" />
+    <state width="1043" height="279" key="GridCell.Tab.0.right/446.1050.1920.1080/0.0.1680.1050@446.1050.1920.1080" timestamp="1586896352189" />
+    <state width="1058" height="332" key="GridCell.Tab.1.bottom" timestamp="1586886472334">
       <screen x="446" y="1050" width="1920" height="1080" />
     </state>
-    <state width="1896" height="339" key="GridCell.Tab.1.bottom/446.1050.1920.1080/0.0.1680.1050@446.1050.1920.1080" timestamp="1586812130013" />
-    <state width="1896" height="339" key="GridCell.Tab.1.center" timestamp="1586812130013">
+    <state width="1656" height="422" key="GridCell.Tab.1.bottom/446.1050.1920.1080/0.0.1680.1050@0.0.1680.1050" timestamp="1586882481621" />
+    <state width="1058" height="332" key="GridCell.Tab.1.bottom/446.1050.1920.1080/0.0.1680.1050@446.1050.1920.1080" timestamp="1586886472334" />
+    <state width="1058" height="332" key="GridCell.Tab.1.center" timestamp="1586886472334">
       <screen x="446" y="1050" width="1920" height="1080" />
     </state>
-    <state width="1896" height="339" key="GridCell.Tab.1.center/446.1050.1920.1080/0.0.1680.1050@446.1050.1920.1080" timestamp="1586812130013" />
-    <state width="1896" height="339" key="GridCell.Tab.1.left" timestamp="1586812130013">
+    <state width="1656" height="422" key="GridCell.Tab.1.center/446.1050.1920.1080/0.0.1680.1050@0.0.1680.1050" timestamp="1586882481621" />
+    <state width="1058" height="332" key="GridCell.Tab.1.center/446.1050.1920.1080/0.0.1680.1050@446.1050.1920.1080" timestamp="1586886472334" />
+    <state width="1058" height="332" key="GridCell.Tab.1.left" timestamp="1586886472334">
       <screen x="446" y="1050" width="1920" height="1080" />
     </state>
-    <state width="1896" height="339" key="GridCell.Tab.1.left/446.1050.1920.1080/0.0.1680.1050@446.1050.1920.1080" timestamp="1586812130013" />
-    <state width="1896" height="339" key="GridCell.Tab.1.right" timestamp="1586812130013">
+    <state width="1656" height="422" key="GridCell.Tab.1.left/446.1050.1920.1080/0.0.1680.1050@0.0.1680.1050" timestamp="1586882481621" />
+    <state width="1058" height="332" key="GridCell.Tab.1.left/446.1050.1920.1080/0.0.1680.1050@446.1050.1920.1080" timestamp="1586886472334" />
+    <state width="1058" height="332" key="GridCell.Tab.1.right" timestamp="1586886472334">
       <screen x="446" y="1050" width="1920" height="1080" />
     </state>
-    <state width="1896" height="339" key="GridCell.Tab.1.right/446.1050.1920.1080/0.0.1680.1050@446.1050.1920.1080" timestamp="1586812130013" />
+    <state width="1656" height="422" key="GridCell.Tab.1.right/446.1050.1920.1080/0.0.1680.1050@0.0.1680.1050" timestamp="1586882481621" />
+    <state width="1058" height="332" key="GridCell.Tab.1.right/446.1050.1920.1080/0.0.1680.1050@446.1050.1920.1080" timestamp="1586886472334" />
     <state x="1389" y="1238" width="977" height="737" key="SettingsEditor" timestamp="1586799008080">
       <screen x="446" y="1050" width="1920" height="1080" />
     </state>
@@ -151,14 +149,14 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/stupid_helmet_helpers.py</url>
-          <line>59</line>
-          <option name="timeStamp" value="2" />
+          <url>file://$PROJECT_DIR$/main.py</url>
+          <line>139</line>
+          <option name="timeStamp" value="23" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/main.py</url>
-          <line>133</line>
-          <option name="timeStamp" value="4" />
+          <url>file://$PROJECT_DIR$/stupid_helmet_helpers.py</url>
+          <line>69</line>
+          <option name="timeStamp" value="24" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -23,9 +23,11 @@ led_dims = (2, 25, 3)  # dimensions of led data [y, x, z] where z is RGB
 c = 20  # led representation block size (in pixels)
 udp_ip =  '192.168.1.223'  #'127.0.0.1'  # udp working network address
 udp_port = 12345  # udp port number
+frame_counter = 0
+frame_send = 2
 
 # FLAGS
-showRect_flg = True  # show rectified frames (cononical view)
+showRect_flg = False  # show rectified frames (cononical view)
 showDisp_flg = True  # show disparity depth map
 showRGB_flg = False  # show led representation
 
@@ -128,10 +130,14 @@ while True:
         rectify_r = cv.remap(gray_r, r1, r2, cv.INTER_LINEAR)
         # calculate depth map in terms of disparity
         dm = sbm.compute(rectify_l, rectify_r)/1024
+        dm = dm[:,bm_n:]
         # calculate RGB representation to send to LEDs
         frame_rgb = shh.parseDisparityMap(dm, bm_n, size=led_dims)[1]
         # send the RGB representation to the helmet LEDs
-        tx.SendData(frame_rgb)
+        frame_counter+=1
+        if frame_counter%frame_send==0:
+            print(frame_counter)
+            tx.SendData(frame_rgb)
 
         # GET USER INPUT (IF NECESSARY)
         # wait maximum 1 ms to read keystroke

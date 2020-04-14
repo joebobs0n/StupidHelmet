@@ -1,4 +1,5 @@
 import numpy as np
+import cv2 as cv
 import socket
 
 
@@ -32,27 +33,45 @@ def parseDisparityMap(frame, num_bins, size=(2, 25, 3)):
                 x1 = int(x_indices[x+1])
                 # pull off frame partition
                 partition = frame[y0:y1, x0:x1]
-                print("min:", np.min(partition))
-                print("max:", np.max(partition))
+                # print("min:", np.min(temp_frame))
+                # print("max:", np.max(temp_frame))
                 # here we can do whatever "statistical analysis" we want
                 # for now, i'm just averaging the data
-                amounts, lower_bound = np.histogram(partition, np.linspace(0, num_bins/2014, 10))
-                result = np.dot(amounts, lower_bound[:-1])
-                print(result)
+                # amounts, lower_bound = np.histogram(partition, np.linspace(0, num_bins/1024, 128))
+                amounts, lower_bound = np.histogram(partition, np.linspace(0, 1.7, 128/6))
+                # print("amount:", amounts)
+                # print("bounds:", lower_bound)
+                # box_frame = temp_frame.copy()
+                # box_frame = cv.rectangle(box_frame, (x0,y0), (x1,y1), (255,255,255), 2)
+                # cv.imshow("frame", box_frame)
+                # cv.imshow("partition", partition)
+                # result = np.dot(amounts, lower_bound[:-1])
+                result = next(spot for spot, value in enumerate(amounts[::-1]) if value > 900)
+                # print(result)
+                # key = cv.waitKey(1)
+                # if key == ord('p'):
+                #     cv.waitKey(0)
                 # partition_data = np.max(partition)
-                partition_data = result
+                # partition_data = result
                 # calculate rgb colors to represent disparity
                 rgb = [0, 0, 0]
-                if partition_data < 29:  # if nothing detected or very very close
+                # max = 5000
+                # min = 500
+                length = len(amounts)-1
+                if result == length:  # if nothing detected or very very close
                 # if partition_data < 0.046:  # if nothing detected or very very close
-                    rgb = [0, 0, 128]  # show blue
-                elif partition_data > 270:  # if something detected very far away
-                # elif partition_data > 1.8:  # if something detected very far away
-                    rgb = [0, 0, 0]  # show black
+                    rgb = [0, 0, 0]  # show black0
+                elif length*1/2 <= result < length:
+                    rgb = [0,255,0]
+                elif 0 <= result < length/3:
+                    rgb = [255,0,0]
                 else:  # if something detected within 1000 disparity
                     # calculate color mixed from red to green
-                    rgb = [partition_data * 128/270,
-                           ((270 - partition_data) * 128/270), 0]
+                    rgb = [255*(length-result)/length,
+                           255*result/length,
+                           0]
+                #     rgb = [partition_data * 128/max,
+                #            ((270 - partition_data) * 128/max), 0]
                 # save rgb value in parsed frame data
                 parsed_frame[y, x] = rgb
 

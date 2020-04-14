@@ -33,17 +33,17 @@ if ret_l == False:
 	print('No left frame received')
 	exit()
 if ret_r == False:
-	print('No right frame receied')
+	print('No right frame received')
 	exit()
 
-frame_l = imutils.rotate_bound(frame_l, 270)
-frame_r = imutils.rotate_bound(frame_r, 90)
+# frame_l = imutils.rotate_bound(frame_l, 270)
+# frame_r = imutils.rotate_bound(frame_r, 90)
 
 shape_l = (int(frame_l.shape[1]), int(frame_l.shape[0]))
 shape_r = (int(frame_r.shape[1]), int(frame_r.shape[0]))
 
-out_l = cv.VideoWriter('test_footage_left.avi', cv.VideoWriter_fourcc('M', 'J', 'P', 'G'), 30, shape_l)
-out_r = cv.VideoWriter('test_footage_right.avi', cv.VideoWriter_fourcc('M', 'J', 'P', 'G'), 30, shape_r)
+out_l = cv.VideoWriter('new_test_footage_left.avi', cv.VideoWriter_fourcc('M', 'J', 'P', 'G'), 30, shape_l)
+out_r = cv.VideoWriter('new_test_footage_right.avi', cv.VideoWriter_fourcc('M', 'J', 'P', 'G'), 30, shape_r)
 
 while True:
 	frame_l = cam_l.read()[1]
