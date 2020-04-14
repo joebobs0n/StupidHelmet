@@ -86,9 +86,6 @@ if ret_r == False:
 # if either didn't return frame, exit
 if q == True:
     quitScript()
-# rotate frames to correct orientation
-# frame_l = cv.rotate(frame_l, cv.ROTATE_90_COUNTERCLOCKWISE)
-# frame_r = cv.rotate(frame_r, cv.ROTATE_90_CLOCKWISE)
 # save shape of read frames
 shape_l = tuple(np.flip(np.shape(frame_l)[0:2]))
 shape_r = tuple(np.flip(np.shape(frame_r)[0:2]))
@@ -117,9 +114,6 @@ while True:
     # continue only if both frames exist
     if ret_l == True and ret_r == True:
         # FRAME MANIPULATIONS (READ->RECTIFY->CALC DISP->GET RGB)
-        # rotate frames appropriately
-        # frame_l = cv.rotate(frame_l, cv.ROTATE_90_COUNTERCLOCKWISE)
-        # frame_r = cv.rotate(frame_r, cv.ROTATE_90_CLOCKWISE)
         # convert frames to grayscale
         gray_l = cv.cvtColor(frame_l, cv.COLOR_BGR2GRAY)
         gray_r = cv.cvtColor(frame_r, cv.COLOR_BGR2GRAY)
